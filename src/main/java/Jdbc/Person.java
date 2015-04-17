@@ -1,6 +1,6 @@
 package Jdbc;
 
-public class Person {
+public class Person extends BaseEntity {
     private int id;
     private String firstName;
     private String lastName;

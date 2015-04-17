@@ -4,16 +4,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonDao extends AbstractDao {
+public class PersonDao extends Dao {
+    final String url = "jdbc:h2:tcp://localhost/test";
+    final String login = "sa";
+    final String password = "sa";
 
     @Override
     public List<Person> findAll() {
-        Statement statement = null;
-        Connection connection = null;
         List<Person> persons = new ArrayList<>();
         try {
-            connection = DriverManager.getConnection("jdbc:h2:tcp://localhost/test", "sa", "sa");
-            statement = connection.createStatement();
+            Connection connection = DriverManager.getConnection(url, login, password);
+            Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT * FROM PERSON");
             while (result.next()) {
                 Person person = new Person();
@@ -24,11 +25,10 @@ public class PersonDao extends AbstractDao {
                 persons.add(person);
             }
             result.close();
-        } catch (SQLException e) {
-            System.err.println("Request or table failed " + e);
-        } finally {
             close(statement);
             close(connection);
+        } catch (SQLException e) {
+            System.err.println("Request or table failed " + e);
         }
         return persons;
     }
@@ -36,11 +36,9 @@ public class PersonDao extends AbstractDao {
     @Override
     public Person findById(int id) {
         Person person = new Person();
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         try {
-            connection = DriverManager.getConnection("jdbc:h2:tcp://localhost/test", "sa", "sa");
-            preparedStatement = connection.prepareStatement("SELECT * FROM PERSON WHERE ID = ?");
+            Connection connection = DriverManager.getConnection(url, login, password);
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PERSON WHERE ID = ?");
             preparedStatement.setInt(1, id);
             ResultSet result = preparedStatement.executeQuery();
             result.next();
@@ -49,11 +47,10 @@ public class PersonDao extends AbstractDao {
             person.setLastName(result.getString("LASTNAME"));
             person.setAge(result.getInt("AGE"));
             result.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
             close(preparedStatement);
             close(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return person;
     }
@@ -70,12 +67,10 @@ public class PersonDao extends AbstractDao {
 
     @Override
     public boolean create(Person person) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         boolean res = false;
         try {
-            connection = DriverManager.getConnection("jdbc:h2:tcp://localhost/test", "sa", "sa");
-            preparedStatement = connection.prepareStatement("INSERT INTO PERSON VALUES (DEFAULT, ?, ?, ?)");
+            Connection connection = DriverManager.getConnection(url, login, password);
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO PERSON VALUES (DEFAULT, ?, ?, ?)");
             preparedStatement.setString(1, person.getFirstName());
             preparedStatement.setString(2, person.getLastName());
             preparedStatement.setInt(3, person.getAge());
@@ -83,11 +78,10 @@ public class PersonDao extends AbstractDao {
             if (result > 0) {
                 res = true;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
             close(preparedStatement);
             close(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return res;
     }

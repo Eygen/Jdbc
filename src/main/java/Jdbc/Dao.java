@@ -5,13 +5,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public abstract class AbstractDao {
-    public abstract List<Person> findAll();
-    public abstract Person findById(int id);
+public abstract class Dao<T extends BaseEntity> {
+    public abstract List<T> findAll();
+    public abstract T findById(int id);
     public abstract boolean delete(int id);
-    public abstract boolean delete(Person person);
-    public abstract boolean create(Person person);
-    public abstract Person update(Person person);
+    public abstract boolean delete(T entity);
+    public abstract boolean create(T entity);
+    public abstract T update(T entity);
 
     public void close(Statement statement) {
         try {
