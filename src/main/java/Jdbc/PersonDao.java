@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonDao extends Dao {
+public abstract class PersonDao implements Dao<Person> {
     final String url = "jdbc:h2:tcp://localhost/test";
     final String login = "sa";
     final String password = "sa";
@@ -25,8 +25,8 @@ public class PersonDao extends Dao {
                 persons.add(person);
             }
             result.close();
-            close(statement);
-            close(connection);
+            statement.close();
+            connection.close();
         } catch (SQLException e) {
             System.err.println("Request or table failed " + e);
         }
@@ -47,8 +47,8 @@ public class PersonDao extends Dao {
             person.setLastName(result.getString("LASTNAME"));
             person.setAge(result.getInt("AGE"));
             result.close();
-            close(preparedStatement);
-            close(connection);
+            preparedStatement.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,8 +78,8 @@ public class PersonDao extends Dao {
             if (result > 0) {
                 res = true;
             }
-            close(preparedStatement);
-            close(connection);
+            preparedStatement.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

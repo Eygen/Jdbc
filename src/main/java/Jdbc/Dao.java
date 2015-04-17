@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public abstract class Dao<T extends BaseEntity> {
+public interface Dao<T extends BaseEntity> {
     public abstract List<T> findAll();
     public abstract T findById(int id);
     public abstract boolean delete(int id);
@@ -13,7 +13,7 @@ public abstract class Dao<T extends BaseEntity> {
     public abstract boolean create(T entity);
     public abstract T update(T entity);
 
-    public void close(Statement statement) {
+    /*public void close(Statement statement) {
         try {
             statement.close();
         } catch (SQLException e) {
@@ -27,5 +27,5 @@ public abstract class Dao<T extends BaseEntity> {
         } catch (SQLException e) {
             System.out.println("Can't close connection " + e);
         }
-    }
+    }*/
 }
